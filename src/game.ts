@@ -99,13 +99,9 @@ export class BridgeGame {
     let winner: Player | undefined;
     let matchingCards = currentRoundCards;
 
-    if (this.trump === '' || this.trump === 'Notrump') {
-    } else {
-      matchingCards = currentRoundCards.filter((card) => {
-        let matches = 'suit' in card && (card.suit === this.trick || card.suit === this.trump);
-        return matches;
-      });
-    }
+    matchingCards = currentRoundCards.filter((card) => {
+      return card.suit === this.trick || card.suit === this.trump;
+    });
 
     if (matchingCards.length === 1) {
       ({ winningCard, winner } = this.getRoundWinner(matchingCards));
@@ -143,8 +139,6 @@ export class BridgeGame {
   resetRound() {
     this.turn = 1;
     this.round += 1;
-    this.trick = '';
-
     if (this.currentRoundCards.length === 4) {
       let result = this.findWinningCard(this.currentRoundCards);
       if (result) {
@@ -154,8 +148,10 @@ export class BridgeGame {
           this.roundWinnerCard = result.winningCard;
           winner.team.score += 1;
           winner.roundWinner = true;
+          if (this.roundWinner) this.rotatePlayers(this.roundWinner);
         }
         this.currentRoundCards = [];
+        this.trick = '';
       }
     }
   }
@@ -170,10 +166,12 @@ export class BridgeGame {
   }
 
   chooseCurrentPlayer() {
-    let currentPlayerIndex = this.players.indexOf(this.currentPlayer);
-    this.players = this.players.slice(currentPlayerIndex).concat(this.players.slice(0, currentPlayerIndex));
-    this.players = this.players.slice(1).concat(this.players.slice(0, 1));
-    this.currentPlayer = this.players[0];
+    if (this.currentPlayer) {
+      let currentPlayerIndex = this.players.indexOf(this.currentPlayer);
+      this.players = this.players.slice(currentPlayerIndex).concat(this.players.slice(0, currentPlayerIndex));
+      this.players = this.players.slice(1).concat(this.players.slice(0, 1));
+      this.currentPlayer = this.players[0];
+    }
   }
 
   rotatePlayers(roundWinner: Player) {
@@ -185,7 +183,6 @@ export class BridgeGame {
   }
 
   play(card: Card) {
-    console.log('played');
     if (this.currentPlayer) {
       if ((this.round === 13 && this.turn === 4) || (this.currentPlayer.hand.length === 0 && this.turn === 1)) {
         this.endGame();
@@ -206,10 +203,10 @@ export class BridgeGame {
     this.turn += 1;
 
     if (this.turn > 4) {
-      let roundWinner = this.findWinningCard(this.currentRoundCards).winner;
-      this.roundWinner = roundWinner;
-      let roundWinnerCard = this.findWinningCard(this.currentRoundCards).winningCard;
-      if (roundWinner) this.rotatePlayers(roundWinner);
+      // let roundWinner = this.findWinningCard(this.currentRoundCards).winner;
+      // this.roundWinner = roundWinner;
+      // let roundWinnerCard = this.findWinningCard(this.currentRoundCards).winningCard;
+      // if (roundWinner) this.rotatePlayers(roundWinner);
       this.resetRound();
     } else if (this.turn > 1) {
       this.chooseCurrentPlayer();
