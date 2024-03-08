@@ -2,6 +2,7 @@ import { Position, CardValue, bidPoints } from './types.js';
 import { Deck, Card, Player, Team } from './classes.js';
 import { shuffle } from './utils.js';
 import { handleWinnerRoute } from './index.js';
+import { lstat } from 'fs';
 
 export class BridgeGame {
   playing: boolean = false;
@@ -16,11 +17,8 @@ export class BridgeGame {
   declarer: Player | undefined = undefined;
   currentPlayer: Player | undefined;
   roundWinner: Player | undefined;
-  roundWinnerCard:
-    | { currentPlayer: Player; suit: string; value: number }
-    | undefined = undefined;
-  currentRoundCards: { currentPlayer: Player; suit: string; value: number }[] =
-    [];
+  roundWinnerCard: { currentPlayer: Player; suit: string; value: number } | undefined = undefined;
+  currentRoundCards: { currentPlayer: Player; suit: string; value: number }[] = [];
 
   constructor(players: Player[]) {
     this.players = players;
@@ -37,10 +35,7 @@ export class BridgeGame {
 
   assignPlayerToTeam() {
     this.players.forEach((player) => {
-      const team =
-        player.position === Position.NORTH || player.position === Position.SOUTH
-          ? this.teams[0]
-          : this.teams[1];
+      const team = player.position === Position.NORTH || player.position === Position.SOUTH ? this.teams[0] : this.teams[1];
       team.addPlayer(player);
       player.assignTeam(team);
     });
@@ -54,10 +49,7 @@ export class BridgeGame {
     this.assignDeclarer();
   }
 
-  calculateHighCardPoints(
-    playerHand: (string | CardValue)[][],
-    player: Player
-  ): number {
+  calculateHighCardPoints(playerHand: (string | CardValue)[][], player: Player): number {
     let points = 0;
     playerHand.forEach((card) => {
       const cardValue = card[1] as string;
@@ -81,19 +73,13 @@ export class BridgeGame {
     });
 
     if (this.teams[0].bidPoints > this.teams[1].bidPoints) {
-      if (
-        this.teams[0].members[0].highCardPoints >
-        this.teams[0].members[1].highCardPoints
-      ) {
+      if (this.teams[0].members[0].highCardPoints > this.teams[0].members[1].highCardPoints) {
         this.declarer = this.teams[0].members[0];
       } else {
         this.declarer = this.teams[0].members[1];
       }
     } else {
-      if (
-        this.teams[1].members[0].highCardPoints >
-        this.teams[1].members[1].highCardPoints
-      ) {
+      if (this.teams[1].members[0].highCardPoints > this.teams[1].members[1].highCardPoints) {
         this.declarer = this.teams[1].members[0];
       } else {
         this.declarer = this.teams[1].members[1];
@@ -107,21 +93,19 @@ export class BridgeGame {
     return { winningCard, winner };
   }
 
-  findWinningCard(
-    currentRoundCards: { currentPlayer: Player; suit: string; value: number }[]
-  ) {
+  findWinningCard(currentRoundCards: { currentPlayer: Player; suit: string; value: number }[]) {
     let maxValue = 0;
-    let winningCard:
-      | { currentPlayer: Player; suit: string; value: number }
-      | undefined;
+    let winningCard: { currentPlayer: Player; suit: string; value: number } | undefined;
     let winner: Player | undefined;
+    let matchingCards = currentRoundCards;
 
-    let matchingCards = currentRoundCards.filter((card) => {
-      let matches =
-        'suit' in card &&
-        (card.suit === this.trick || card.suit === this.trump);
-      return matches;
-    });
+    if (this.trump === '' || this.trump === 'Notrump') {
+    } else {
+      matchingCards = currentRoundCards.filter((card) => {
+        let matches = 'suit' in card && (card.suit === this.trick || card.suit === this.trump);
+        return matches;
+      });
+    }
 
     if (matchingCards.length === 1) {
       ({ winningCard, winner } = this.getRoundWinner(matchingCards));
@@ -138,12 +122,8 @@ export class BridgeGame {
     return ({ winningCard, winner } = this.findHighestCard(matchingCards));
   }
 
-  findHighestCard(
-    matchingCards: { currentPlayer: Player; suit: string; value: number }[]
-  ) {
-    let winningCard:
-      | { currentPlayer: Player; suit: string; value: number }
-      | undefined;
+  findHighestCard(matchingCards: { currentPlayer: Player; suit: string; value: number }[]) {
+    let winningCard: { currentPlayer: Player; suit: string; value: number } | undefined;
     let winner: Player | undefined;
     let maxValue = 0;
     let cards = Object.values(matchingCards);
@@ -190,29 +170,24 @@ export class BridgeGame {
   }
 
   chooseCurrentPlayer() {
+    let currentPlayerIndex = this.players.indexOf(this.currentPlayer);
+    this.players = this.players.slice(currentPlayerIndex).concat(this.players.slice(0, currentPlayerIndex));
     this.players = this.players.slice(1).concat(this.players.slice(0, 1));
     this.currentPlayer = this.players[0];
   }
 
   rotatePlayers(roundWinner: Player) {
-    const winnerIndex = this.players.findIndex(
-      (player) => player === roundWinner
-    );
+    const winnerIndex = this.players.findIndex((player) => player === roundWinner);
 
-    this.players = [
-      ...this.players.slice(winnerIndex),
-      ...this.players.slice(0, winnerIndex),
-    ];
+    this.players = [...this.players.slice(winnerIndex), ...this.players.slice(0, winnerIndex)];
 
     this.currentPlayer = this.players.find((player) => player === roundWinner);
   }
 
   play(card: Card) {
+    console.log('played');
     if (this.currentPlayer) {
-      if (
-        (this.round === 13 && this.turn === 4) ||
-        (this.currentPlayer.hand.length === 0 && this.turn === 1)
-      ) {
+      if ((this.round === 13 && this.turn === 4) || (this.currentPlayer.hand.length === 0 && this.turn === 1)) {
         this.endGame();
       }
 
@@ -233,6 +208,7 @@ export class BridgeGame {
     if (this.turn > 4) {
       let roundWinner = this.findWinningCard(this.currentRoundCards).winner;
       this.roundWinner = roundWinner;
+      let roundWinnerCard = this.findWinningCard(this.currentRoundCards).winningCard;
       if (roundWinner) this.rotatePlayers(roundWinner);
       this.resetRound();
     } else if (this.turn > 1) {

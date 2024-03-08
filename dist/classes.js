@@ -65,3 +65,9 @@ export class Team {
         this.score += 1;
     }
 }
+export class Robot extends Player {
+    constructor() {
+        super(`Robot ${Robot.count++}`);
+    }
+}
+Robot.count = 1;
