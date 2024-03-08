@@ -1,0 +1,105 @@
+<h1 class="p-2 mb-2">Let's Play!</h1>
+<p class="pb-2 m-2">
+  Team <% if (teams[0].bidPoints > teams[1].bidPoints) { %> South-North <% }
+  else { %> West-East <%}%> is the highest bidder with a total of <%=
+  teams[0].bidPoints > teams[1].bidPoints ? teams[0].bidPoints :
+  teams[1].bidPoints %> points!
+</p>
+<p>Please pick a Trump card</p>
+<form action="/pickTrump" method="post" id="playTrumpSubmit">
+  <div class="row">
+    <% for (let i = 0; i <= 4; i++) { %>
+    <div class="width-prop mt-5">
+      <div class="col">
+        <% if (i < 4) { %>
+        <input
+          class="btn-radio trump-card"
+          type="radio"
+          name="trump"
+          id="<%=deck.suits[i]%>"
+          value="<%=deck.suits[i]%>"
+          required
+        />
+        <label class="btn btn-primary player-choice-btn <%= deck.suits[i] ===
+        "Hearts" || deck.suits[i] === "Diamonds" ? 'red' : 'black'%>"
+        for="<%=deck.suits[i]%>"><%=getCardIcon(deck.suits[i])%> <% } else { %>
+        <input
+          class="btn-radio trump-card"
+          type="radio"
+          name="trump"
+          id="Notrump"
+          value="Notrump"
+          required
+        />
+        <label class="btn btn-primary player-choice-btn black" for="Notrump"
+          >NT</label
+        >
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</form>
+<h3 class="pt-5">Players and Teams</h3>
+<div class="row team-container-init pt-5">
+  <% playersAndTeams.forEach(player => { %>
+  <div class="col py-3">
+    <div
+      class="card <%= currentPlayer.name === player[0]? 'active-player' : '' %>"
+    >
+      <div class="card-body text-center">
+        <h4 class="p-1"><%=player[0]%></h4>
+        <% if (currentPlayer.name === player[0]) { %>
+        <span
+          class="badge badge-pill <%=currentPlayer.team.name === 'South-North'? 'color-team-1' : 'color-team-2' %>"
+          >Your Pick!</span
+        >
+        <% } else {%>
+        <em class="opacity-50">Waiting...⏳</em>
+        <%}%>
+        <h5 class="card-title opacity-50"><%=player[1]%></h5>
+        <p class="card-text">
+          HCP : <%let currentTeamMember = players.find(p => p.name ===
+          player[0])%> <%=currentTeamMember.highCardPoints%>
+        </p>
+      </div>
+    </div>
+  </div>
+  <% })%>
+  <div class="declarer-hand pt-2">
+    <h3 class="pt-5 text-center">Your Hand</h3>
+    <div class="row justify-content-center">
+      <% declarer.hand.forEach((c, index) => {%>
+      <div class="width-prop mt-5">
+        <input
+          type="radio"
+          class="btn-radio play-card"
+          id="btn-radio<%=index%>"
+          name="selectedCard"
+          value="<%= JSON.stringify([c[0], c[1], c[2]]) %>"
+          required
+        />
+        <label for="btn-radio<%=index%>" class="btn btn-primary
+        player-choice-btn <%= c[0] === 'Hearts' || c[0] === 'Diamonds' ? 'red' :
+        "black" %>"><%= `${getCardIcon(c[0])} ${c[2] > 10 ? c[1] : c[2]}` %>
+      </div>
+      <% })%>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      $('.trump-card').click(function () {
+        $('#playTrumpSubmit').submit();
+      });
+
+      $('.card-title').each(function () {
+        if ($(this).text() === 'South-North') {
+          $(this).css('color', 'rgb(0, 233, 12)');
+        } else {
+          $(this).css('color', 'rgb(142, 0, 224)');
+        }
+      });
+    });
+  </script>
+</div>

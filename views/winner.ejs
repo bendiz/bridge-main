@@ -1,0 +1,26 @@
+<%- include('./partials/header.ejs') %>
+<body>
+  <div class="winner-details position-absolute text-center">
+    <div class="winner-text">
+      <h2>CONGRATS WINNER!</h2>
+      <h1><%=winner%></h1>
+      <p class="fs-2">Score: <%=score%></p>
+      <button type="button" class="btn btn-success winner-button">
+        More confetti
+      </button>
+      <form action="/playAgain" method="get" class="d-inline">
+        <button type="submit" id="playAgain" class="btn btn-outline-success">
+          Another Round
+        </button>
+      </form>
+    </div>
+  </div>
+  <canvas id="confettiCanvas" class="w-100 winner-confetti"></canvas>
+  <script type="module" src="js/script.js"></script>
+  <script>
+    $('#playAgain').click(function () {
+      $('#playAgain').submit();
+    });
+  </script>
+</body>
+<%- include('./partials/footer.ejs') %>

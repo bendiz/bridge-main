@@ -1,0 +1,27 @@
+*~_~**~~*~_~**~~*~_~**~ PACKAGE.JSON SCRIPTS ~*~_~**~~*~_~**~~*~_~**~_~*
+*~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~*
+
+---------------------------------------------------------------------
+// Sletter dist directory før hver build + kompilerer TS til JS //
+
+"build": "rimraf dist && npx tsc",
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+// Concurrently lar meg kjøre flere commands samtidig
+npsx tsc -w lar meg kjøre TS compileren i watch mode så den følger endringer
+kompilerer filene på nytt når det skjer en endring.
+nodemon dist/index.js restarter node.js applikasjonen hver gang en endring skjer //
+
+"dev": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\""
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+// Kjøres alltid før npm run start eller npm run dev //
+
+"prestart": "npm run build",
+"predev": "npm run build"
+---------------------------------------------------------------------
+*~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~_~*~_~**~
+
+

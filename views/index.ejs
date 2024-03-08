@@ -1,0 +1,68 @@
+<%- include('./partials/header.ejs') %>
+<div class="container signup-container">
+  <div class="signup">
+    <div class="description text-center mt-5">
+      <i class="bi bi-suit-club-fill head-icon"></i>
+      <h1>Bridge</h1>
+      <p>Please enter the names of four players...</p>
+    </div>
+    <form action="/submit" method="post" name="playerForm">
+      <div class="row">
+        <% for (let i = 1; i <= 4; i++) { %>
+        <div class="col-3"></div>
+        <div class="col-6 my-2">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text opacity-50" id=""
+                ><i class="fa-regular fa-user player-icon"></i
+              ></span>
+            </div>
+            <input
+              type="text"
+              name="player<%=i%>"
+              class="form-control"
+              placeholder="Player <%=i%>"
+              maxlength="10"
+              pattern="[A-Za-z]+"
+              required
+            />
+          </div>
+        </div>
+        <div class="col-3"></div>
+        <% } %>
+      </div>
+      <div class="row mt-2">
+        <div class="col-5"></div>
+        <button class="col-2 btn btn-success py-4">Start</button>
+        <div class="col-5"></div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  $('form').submit(function (e) {
+    try {
+      validateForm();
+    } catch (error) {
+      alert(error.message);
+      e.preventDefault();
+    }
+  });
+  function validateForm() {
+    let players = [];
+    for (let i = 1; i <= 4; i++) {
+      players.push(document.forms['playerForm']['player' + i].value);
+    }
+
+    const uniqueNames = new Set(players);
+
+    if (uniqueNames.size < 4) {
+      throw new Error('Please enter unique names for all players');
+    }
+  }
+</script>
+<script
+  src="https://kit.fontawesome.com/46b99ae681.js"
+  crossorigin="anonymous"
+></script>
+<%- include('./partials/footer.ejs') %>

@@ -1,0 +1,201 @@
+* {
+  font-family: Poppins, sans-serif;
+}
+
+:root {
+  --team-color-1: rgb(0, 233, 12);
+  --team-color-2: rgb(142, 0, 224);
+  --team-color-2-opacity: rgba(142, 0, 224, 0.486);
+  --card-box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
+    rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+/* Homepage */
+
+input[type='text']::placeholder {
+  opacity: 0.5;
+}
+
+.signup-container {
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.signup {
+  position: relative;
+  top: 20%;
+}
+
+.player-icon {
+  font-size: 1rem;
+  padding: 1.2rem;
+  opacity: 0.5;
+}
+
+.head-icon {
+  font-size: 4rem;
+}
+
+/* GamePage */
+input[type='radio'] {
+  display: none;
+}
+
+label:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.5s;
+}
+
+.round-info > p {
+  margin: 0;
+}
+
+.game-container {
+  height: 100vh;
+}
+
+.player-choice-btn {
+  background-color: #f8f8f8e3;
+  background-color: transparent;
+  color: #918c8c;
+  width: 100%;
+  height: 150px;
+  font-size: 3rem;
+  border: 0;
+  box-shadow: var(--card-box-shadow);
+}
+
+.card {
+  border: 0;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin: 1rem 0.5rem;
+  width: 200px;
+}
+
+.card h5,
+.card h4 {
+  margin: 0;
+}
+
+.col:nth-of-type(odd) .card {
+  border-top: 3px solid var(--team-color-1);
+}
+
+.col:nth-of-type(even) .card {
+  border-top: 3px solid var(--team-color-2);
+}
+
+.active-player {
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  /* box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px; */
+  transform: scale(1.1);
+}
+
+.col:nth-of-type(even) .card h5 {
+  color: var(--team-color-2);
+}
+
+.col:nth-of-type(odd) .card h5 {
+  color: var(--team-color-1);
+}
+
+.col:nth-of-type(even) .card h5 {
+  color: var(--team-color-2);
+}
+
+.player-choice-btn.btn:hover {
+  background-color: transparent;
+  scale: 1.1;
+}
+
+.player-choice-button.btn:active {
+  background-color: rgb(238, 238, 238) !important;
+}
+
+.width-prop {
+  width: 150px;
+}
+
+.winner {
+  position: relative;
+  width: 400px;
+  height: 70px;
+}
+
+.round-winner {
+  position: relative;
+  top: 50%;
+}
+
+canvas#confetti {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
+
+.round-winner-card {
+  position: relative;
+  box-shadow: var(--card-box-shadow);
+  font-size: 1.2rem;
+  top: 50%;
+  padding: 1rem 0.3rem 1rem 0.3rem;
+  margin-inline: 0.5rem;
+  border-radius: 4px;
+}
+
+.color-team-1 {
+  background-color: var(--team-color-1);
+}
+
+.color-team-2 {
+  background-color: var(--team-color-2);
+}
+
+/* WinnerPage */
+
+.winner-confetti {
+  height: 100vh;
+}
+
+.winner-details {
+  background: linear-gradient(
+    68.6deg,
+    rgba(252, 165, 241, 0.5) 1.8%,
+    rgba(181, 255, 255, 0.5) 100.5%
+  );
+  height: 100vh;
+  width: 100vw;
+}
+
+.winner-text {
+  background: rgba(255, 255, 255, 0.295);
+  padding: 3rem;
+  position: absolute;
+  top: 35%;
+  left: 0;
+  right: 0;
+}
+
+/* General */
+form {
+  padding: 0;
+}
+
+.red {
+  color: rgb(255, 0, 0) !important;
+}
+
+.black {
+  color: black !important;
+}
+
+.container {
+  width: 980px !important;
+}
