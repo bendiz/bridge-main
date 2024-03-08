@@ -93,7 +93,6 @@ export class Player {
   //       maxSuit = suit as Suit;
   //     }
   //   }
-  //   console.log(maxSuit);
   //   return maxSuit;
   // }
 
@@ -113,16 +112,12 @@ export class Player {
 
   //     let lowCard = filteredHand.reduce((prev, curr) => (prev[2] < curr[2] ? prev : curr));
   //     highestCard = highCard;
-  //     console.log('Higest card: ', highestCard);
   //   } else if (!game.trick) {
-  //     console.log('No trick');
   //     let trickSuit = this.countSuitCards();
 
   //     let lowCard = this.hand.reduce((prev, curr) => (prev[2] < curr[2] ? prev : curr));
-  //     console.log(lowCard);
   //     highestCard = lowCard;
   //   }
-  //   console.log('played card');
   //   return new Card(highestCard[1] as keyof typeof CardValue, highestCard[0].toString());
   // }
 }
